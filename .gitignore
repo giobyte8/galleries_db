@@ -1,0 +1,5 @@
+.DS_Store
+
+# DB Connection params
+migrations.yml
+migrations-test.yml
