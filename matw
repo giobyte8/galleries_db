@@ -10,5 +10,22 @@
 # 3. Invoke 'mat' command inside container by passing arguments
 #
 
-DOCKER_IMAGE_TAG=1.0.2
-docker run --rm --network dockerdev_default -ti -v "$PWD":/mat giobyte8/mat:"$DOCKER_IMAGE_TAG" "$@"
+# ref: https://stackoverflow.com/a/4774063/3211029
+HERE="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+CURR_PATH="${pwd}"
+cd "${HERE}"
+
+if [ ! -f .env ]; then
+    echo "File '.env' not found"
+    exit 1
+fi
+
+# Load following variables from .env
+# MAT_DOCKER_IMAGE_VERSION
+# MAT_DOCKER_NETWORK
+source .env
+
+docker run --rm \
+  --network "${MAT_DOCKER_NETWORK}" \
+  -ti -v "$PWD":/mat \
+  giobyte8/mat:"$MAT_DOCKER_IMAGE_VERSION" "$@"
